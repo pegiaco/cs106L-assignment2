@@ -1,0 +1,44 @@
+Assignment 2: STL HashMap (short answer questions)
+Names: Paul-Emile Giacomelli
+
+
+Milestone 1:
+
+1.
+at() and [] differ in error handling.
+While at() performs bounds checking and throws an exception for out-of-range access, [] does not perform bounds checking by default, potentially leading to undefined behavior.
+at() was overloaded to provide explicit error handling, ensuring safer access to elements.
+
+2.
+When searching for a key in a HashMap, m.find(k) is preferred over std::find(m.begin(), m.end(), k). m.find(k) is optimized for HashMap and has a constant time complexity on
+average due to the internal data structure. On the other hand, std::find performs a linear search through the container, resulting in a time complexity of O(n).
+
+3.
+The HashMap class follows the RAII principle, making it RAII-compliant. This means that resources, such as memory allocation for the internal data structure, are acquired in
+the constructor and released in the destructor. This automatic resource management ensures proper cleanup and prevents resource leaks.
+
+4.
+HashMapIterator's operator++ is responsible for advancing the iterator to the next element. It increments the index, checks for the end of the current bucket, and moves to
+the next non-empty bucket if necessary. It also handles reaching the end of the container by setting the iterator to the end iterator state.
+
+
+Milestone 2:
+
+1.
+In the HashMap class, custom implementations of special member functions are needed due to resource management, while the HashMapIterator
+class can default them, following the Rule of Zero. The distinction arises from the Rule of Five versus the Rule of Zero and the behavior
+of std::vector's copy constructor and assignment operator. By managing resources internally, HashMap requires careful ownership and
+cleanup handling, necessitating custom implementations. On the other hand, as a lightweight iterator without direct resource management,
+HashMapIterator can rely on the default implementations provided by the compiler. This approach simplifies the code and aligns with the Rule of Zero.
+The usage of std::vector within HashMap further emphasizes the need for custom implementations, as its default copy operations would result in
+undesired shared ownership.
+
+2.
+In the move constructor or move assignment operator of HashMap, each member needs to be std::moved, even though the parameter rhs is already
+an r-value reference.
+Despite rhs being an r-value reference, it is treated as an l-value within the function scope. To invoke move semantics and transfer ownership
+of the resources, std::move is used on each member variable. This explicit use of std::move converts the l-value rhs into an r-value, indicating
+that the resources should be moved rather than copied.
+By applying std::move to each member variable, the move constructor or move assignment operator can efficiently transfer the resources from rhs
+to the current instance of HashMap, leaving rhs in a valid but unspecified state. This ensures efficient resource transfer and avoids unnecessary
+copies.
